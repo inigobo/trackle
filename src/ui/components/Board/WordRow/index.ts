@@ -1,0 +1,1 @@
+export { WordRow } from './WordRow'

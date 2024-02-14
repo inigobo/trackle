@@ -1,0 +1,1 @@
+export { WelcomeCarousel } from './WelcomeCarousel'

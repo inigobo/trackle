@@ -1,16 +1,14 @@
+import { RegisterForm } from '@/src/ui/components/RegisterForm'
 import { styled } from '@stitches/react'
 import { RegisterStyles } from './Register.styles'
-import { RegisterForm } from '@/src/ui/components/RegisterForm'
 
-const RegisterPage = () => {
+export default function RegisterPage() {
   return (
     <RegisterLayout>
-      <h1>Register</h1>
+      <h1>Crear una cuenta</h1>
       <RegisterForm />
     </RegisterLayout>
   )
 }
-
-export default RegisterPage
 
 const RegisterLayout = styled('div', RegisterStyles)

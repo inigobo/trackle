@@ -1,26 +1,29 @@
-import { useUser } from '@supabase/auth-helpers-react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { Col, Form, Row } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
-export const AddBoardModal = () => {
+type AddBoardModalProps = {
+  userId: string
+}
+
+export const AddBoardModal = ({ userId }: AddBoardModalProps) => {
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const user = useUser()
+  const router = useRouter()
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const url = event.target.board.value.trim().replace(/\r?\n|\r/g, '')
+    const url = (event.target as HTMLFormElement).board.value
 
     const data = {
       playUrl: url,
-      userId: user.id,
+      userId,
     }
 
     try {
@@ -36,28 +39,18 @@ export const AddBoardModal = () => {
         throw new Error(`API error: ${response.statusText}`)
       }
 
-      const createdPlay = await response.json()
-
       setShow(false)
+      router.reload()
     } catch (error) {
       console.error('Error creating game:', error)
       alert('An error occurred. Please try again later.')
     }
   }
-  if (!user) {
-    return (
-      <Link
-        href="/login"
-        className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-        Login
-      </Link>
-    )
-  }
 
   return (
     <>
       <Button variant="secondary" onClick={handleShow}>
-        Add
+        Añadir partida
       </Button>
 
       <Modal
@@ -66,30 +59,18 @@ export const AddBoardModal = () => {
         backdrop="static"
         keyboard={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Register a played game</Modal.Title>
+          <Modal.Title>Registrar una partida</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="addBoardForm.ControlInput1">
-              <Row>
-                <Col>
-                  <Form.Label>Submitting as</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={user.user_metadata.username}
-                    disabled
-                  />
-                </Col>
-              </Row>
-            </Form.Group>
             <Form.Group
               className="mb-3"
               controlId="addBoardForm.ControlTextarea1">
-              <Form.Label>Paste your board result here</Form.Label>
+              <Form.Label>Pega el link de tu tablero aquí</Form.Label>
               <Form.Control as="textarea" rows={10} name="board" />
             </Form.Group>
             <Button variant="primary" type="submit">
-              Add
+              Añadir
             </Button>
           </Form>
         </Modal.Body>

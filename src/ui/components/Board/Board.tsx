@@ -1,4 +1,4 @@
-import { Board as BoardType } from '@/src/domain/board'
+import { Board as BoardType } from '@/src/application/board'
 import { styled } from '@stitches/react'
 import { BoardGridStyles, BoardLayoutStyles } from './Board.styles'
 import { LetterTile } from './LetterTile'
@@ -26,7 +26,7 @@ export const Board = ({ board }: { board: BoardType }) => {
             )
           })
         ) : (
-          <>Haven't played today</>
+          <>No has jugado aún</>
         )}
       </BoardGrid>
     </BoardLayout>

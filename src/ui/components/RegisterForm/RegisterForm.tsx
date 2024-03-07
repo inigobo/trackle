@@ -43,6 +43,16 @@ const schema = yup.object().shape({
     .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
 })
 
+type Values = {
+  email: string
+  password: string
+  confirmPassword: string
+  username: string
+  firstName: string
+  surname: string
+  avatarSeed: string
+}
+
 export const RegisterForm = () => {
   const [avatarSeeds, setAvatarSeeds] = useState(
     Array.from({ length: 4 }, () =>
@@ -61,26 +71,24 @@ export const RegisterForm = () => {
     )
   }
 
-  const submitHandler = async event => {
-    console.log(event)
-
-    const { data, error } = await supabase.auth.signUp({
-      email: event.email,
-      password: event.password,
+  async function handleSubmit(values: Values) {
+    const { error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
       options: {
         emailRedirectTo: `${origin}/api/auth/callback`,
         data: {
-          username: event.username,
-          fullname: `${event.firstName} ${event.surname}`,
-          avatar_seed: event.avatarSeed,
+          username: values.username,
+          fullname: `${values.firstName} ${values.surname}`,
+          avatar_seed: values.avatarSeed,
         },
       },
     })
 
     if (error) {
-      console.log(`Error: ${error} `)
+      console.error(`Error: ${error} `)
     } else {
-      router.push(`profile/${event.username}`)
+      router.push(`profile/${values.username}`)
     }
   }
 
@@ -88,8 +96,7 @@ export const RegisterForm = () => {
     <RegisterFormLayout style={RegisterFormStyles}>
       <Formik
         validationSchema={schema}
-        onSubmit={submitHandler}
-        onChange={console.log}
+        onSubmit={handleSubmit}
         validateOnChange={false}
         initialValues={{
           username: '',
@@ -101,7 +108,7 @@ export const RegisterForm = () => {
           avatarSeed: avatarSeeds[0],
         }}>
         {({
-          handleSubmit = { submitHandler },
+          handleSubmit,
           handleChange,
           handleBlur,
           errors,
@@ -110,21 +117,21 @@ export const RegisterForm = () => {
         }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Row>
-              <h3>Your profile</h3>
+              <h3>Mi perfil</h3>
               <Form.Group controlId="validationFirstName" as={Col}>
                 <FloatingLabel
                   controlId="floatingInput1"
-                  label="Name"
+                  label="Nombre"
                   className="mb-3">
                   <Form.Control
                     type="text"
                     name="firstName"
                     autoCapitalize="true"
                     value={values.firstName}
-                    placeholder="Name"
+                    placeholder="Nombre"
                     onChange={handleChange('firstName')}
                     onBlur={handleBlur('firstName')}
-                    isInvalid={touched.firstName && errors.firstName}
+                    isInvalid={!!touched.firstName && !!errors.firstName}
                     required
                   />
                   <Form.Control.Feedback></Form.Control.Feedback>
@@ -140,13 +147,13 @@ export const RegisterForm = () => {
                   className="mb-3">
                   <Form.Control
                     type="text"
-                    name="surname"
+                    name="Apellido"
                     autoCapitalize="true"
                     value={values.surname}
                     placeholder="Surname"
                     onChange={handleChange('surname')}
                     onBlur={handleBlur('surname')}
-                    isInvalid={touched.surname && errors.surname}
+                    isInvalid={!!touched.surname && !!errors.surname}
                     required
                   />
                   <Form.Control.Feedback></Form.Control.Feedback>
@@ -164,13 +171,13 @@ export const RegisterForm = () => {
                   className="mb-3">
                   <Form.Control
                     type="text"
-                    name="username"
+                    name="Nombre de usuario"
                     autoComplete="new-username"
                     defaultValue={values.username}
                     placeholder="Username"
                     onChange={handleChange('username')}
                     onBlur={handleBlur('username')}
-                    isInvalid={touched.username && errors.username}
+                    isInvalid={!!touched.username && !!errors.username}
                     required
                   />
                   <Form.Control.Feedback></Form.Control.Feedback>
@@ -183,15 +190,15 @@ export const RegisterForm = () => {
                 <FloatingLabel
                   controlId="floatingInput4"
                   label="Email"
-                  name="email"
                   className="mb-3">
                   <Form.Control
+                    name="email"
                     type="email"
                     placeholder="name@example.com"
                     value={values.email}
                     onChange={handleChange('email')}
                     onBlur={handleBlur('email')}
-                    isInvalid={touched.email && errors.email}
+                    isInvalid={!!touched.email && !!errors.email}
                     required
                   />
                   <Form.Control.Feedback></Form.Control.Feedback>
@@ -201,21 +208,21 @@ export const RegisterForm = () => {
                 </FloatingLabel>
               </Form.Group>
             </Row>
-            <h3>Password</h3>
+            <h3>Contraseña</h3>
             <Form.Group controlId="validationPassword">
               <FloatingLabel
                 controlId="floatingInput5"
-                label="Password"
+                label="Contraseña"
                 className="mb-3">
                 <Form.Control
                   type="password"
                   name="password"
                   autoComplete="new-password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
                   value={values.password}
                   onChange={handleChange('password')}
                   onBlur={handleBlur('password')}
-                  isInvalid={touched.password && errors.password}
+                  isInvalid={!!touched.password && !!errors.password}
                   required
                 />
                 <Form.Control.Feedback></Form.Control.Feedback>
@@ -231,13 +238,15 @@ export const RegisterForm = () => {
                 className="mb-3">
                 <Form.Control
                   type="password"
-                  placeholder="Confirm password"
+                  placeholder="Repetir contraseña"
                   autoComplete="new-password"
                   name="confirmPassword"
                   value={values.confirmPassword}
                   onChange={handleChange('confirmPassword')}
                   onBlur={handleBlur('confirmPassword')}
-                  isInvalid={touched.confirmPassword && errors.confirmPassword}
+                  isInvalid={
+                    !!touched.confirmPassword && !!errors.confirmPassword
+                  }
                   required
                 />
                 <Form.Control.Feedback></Form.Control.Feedback>
@@ -295,7 +304,7 @@ export const RegisterForm = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Register
+              Registrarme
             </Button>
           </Form>
         )}

@@ -10,7 +10,7 @@ export class PlayPrismaRepository extends PrismaRepository implements PlayReposi
         this.repository = this.getClient().play
     }
 
-    //TODO: use dto
+    //TODO: use dto. Las entidades de dominio son clases?
     async addPlay(attempts: string, gameId: number, userId: string): Promise<Play> {
         const play = await this.repository.create({
             data: {
@@ -27,7 +27,7 @@ export class PlayPrismaRepository extends PrismaRepository implements PlayReposi
                 .replace(/'/g, "") // Remove all single quotes
                 .replace(/\[|\]/g, "") // Remove square brackets
                 .split(",") // Split by comma
-                .filter(item => !item) // Remove empty strings
+                .filter((item) => item !== '') // Remove empty strings
 
         }
     }

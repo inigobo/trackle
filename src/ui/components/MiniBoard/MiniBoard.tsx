@@ -1,5 +1,4 @@
-import { Board } from '@/src/domain/board'
-import { Stack } from 'react-bootstrap'
+import { Board } from '@/src/application/board'
 
 type EmojiMapType = Record<number, string>
 
@@ -12,13 +11,26 @@ export const MiniBoard = ({ board }: { board: Board }) => {
   }
 
   return (
-    <Stack gap={2}>
-      {board.map(word => {
+    <div
+      style={{
+        gap: 8,
+        display: 'flex',
+        height: '10px',
+        flexDirection: 'column',
+      }}>
+      {board.map((word, index) => {
         return (
-          <Stack style={{ height: '10px' }} direction="horizontal" gap={2}>
-            {word.map(({ state }) => {
+          <div
+            key={index}
+            style={{
+              display: 'flex',
+              height: '10px',
+              gap: 8,
+            }}>
+            {word.map(({ state }, index) => {
               return (
                 <div
+                  key={index}
                   style={{
                     width: '10px',
                     display: 'flex',
@@ -29,9 +41,9 @@ export const MiniBoard = ({ board }: { board: Board }) => {
                 </div>
               )
             })}
-          </Stack>
+          </div>
         )
       })}
-    </Stack>
+    </div>
   )
 }

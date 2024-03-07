@@ -12,6 +12,13 @@ export type ProfileProps = {
   }
 }
 
+// type ProfileStats = {
+//   streak: number
+//   maxStreak: number
+//   winPercentage: number
+//   gamesPlayed: number
+// }
+
 export const ProfileInfo = ({ currentUser }: ProfileProps) => {
   return (
     <Col>
@@ -19,17 +26,10 @@ export const ProfileInfo = ({ currentUser }: ProfileProps) => {
         <Col>
           <Avatar seed={currentUser.avatarSeed} variant={'medium'} />
         </Col>
-        <Col
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'left',
-            justifyContent: 'center',
-          }}>
+        <Col>
           <NameContainer>{currentUser.fullName}</NameContainer>
           <UsernameContainer>{currentUser.username}</UsernameContainer>
         </Col>
-        <Col>{/* <ModifyProfileModal currentUser={userProfile} /> */}</Col>
       </Row>
       <Row>
         <Stack direction="horizontal">

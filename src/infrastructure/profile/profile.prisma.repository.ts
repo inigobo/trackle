@@ -11,11 +11,18 @@ export class ProfilePrismaRepository extends PrismaRepository implements Profile
     }
     async findByGroup(groupId: string): Promise<Profile[]> {
         const profiles = await this.repository.findMany({
+            where: {
+                groups: {
+                    some: {
+                        group_id: groupId,
+                    }
+                }
+            }
 
         })
 
         return profiles.map((prismaProfile) => {
-            return { // Necesito pasar el UUID? Username es unique
+            return {
                 id: prismaProfile.id,
                 username: prismaProfile.username,
                 avatarSeed: prismaProfile.avatar_seed,
@@ -31,16 +38,12 @@ export class ProfilePrismaRepository extends PrismaRepository implements Profile
             }
         })
 
-        return { // Necesito pasar el UUID? Username es unique
+        return {
             id: prismaProfile.id,
             username: prismaProfile.username,
             avatarSeed: prismaProfile.avatar_seed,
             fullName: prismaProfile.fullname
         }
-    }
-
-    findById(userId: string): Promise<Profile> {
-        throw new Error("Method not implemented.");
     }
 
 } 

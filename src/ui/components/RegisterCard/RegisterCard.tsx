@@ -3,7 +3,7 @@ import Link from 'next/link'
 const RegisterCard = () => {
   return (
     <div>
-      Don't have an account? <Link href="/register">Register</Link>{' '}
+      No tienes cuenta? <Link href="/register">Regístrate aquí</Link>
     </div>
   )
 }

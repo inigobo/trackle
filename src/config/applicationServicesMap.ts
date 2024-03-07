@@ -1,20 +1,26 @@
 import { PlayPrismaRepository } from "@/src/infrastructure/play/play.prisma.repository"
-import { GetPlayForUserAndDayUseCase } from "@/src/services/useCases/getPlayForUserAndDay.useCase"
-import { GetAllPlaysFromUserUseCase } from "../services/useCases/getAllPlaysFromUser.useCase"
+import { GetPlayForUserAndDayUseCase } from "@/src/application/play/useCases/getPlayForUserAndDay.useCase"
+import { GetAllPlaysFromUserUseCase } from "../application/play/useCases/getAllPlaysFromUser.useCase"
 import { ProfilePrismaRepository } from "../infrastructure/profile/profile.prisma.repository"
-import { GetProfileByUsername } from "../services/useCases/getProfileByUsername.useCase"
-import { GetAllProfilesForGroup } from "../services/useCases/getAllProfilesForGroup.useCase"
-import { GenerateBoardsUseCase } from "../services/useCases/generateBoards.useCase"
+import { GetProfileByUsernameUseCase } from "../application/profile/useCases/getProfileByUsername.useCase"
+import { GetAllProfilesForGroupUseCase } from "../application/profile/useCases/getAllProfilesForGroup.useCase"
 import { BoardGenerator } from "../services/generateBoard"
 import { GamePrismaRepository } from "../infrastructure/game/game.prisma.repository"
-import { RegisterPlayedGameUseCase } from "../services/useCases/registerPlayedGame.useCase"
+import { RegisterPlayedGameUseCase } from "../application/play/useCases/registerPlayedGame.useCase"
 import { PlayDecoder } from "../services/playDecoder"
+import { GroupPrismaRepository } from "../infrastructure/group/group.prisma.repository"
+import { CreateGroupUseCase } from "../application/group/useCases/createGroup.useCase"
+import { AddUserToGroupUseCase } from "../application/group/useCases/addUserToGroup.useCase"
+import { GetAllGroupsForUserUseCase } from "../application/group/useCases/getAllGroupsForUser.useCase"
+import { GetAllGroupsUseCase } from "../application/group/useCases/getAllGroups.useCase"
+import { GetGroupByNameUseCase } from "../application/group/useCases/getGroupByName.useCase"
 
 class ApplicationServicesMap {
 
     playRepository = this.getPlayRepository()
     profileRepository = this.getProfileRepository()
     gameRepository = this.getGameRepository()
+    groupRepository = this.getGroupRepository()
     boardGenerator = this.getBoardGenerator()
     playDecoder = this.getPlayDecoder()
 
@@ -32,31 +38,53 @@ class ApplicationServicesMap {
         )
 
     getProfileByUsername = () =>
-        new GetProfileByUsername(
+        new GetProfileByUsernameUseCase(
             this.profileRepository
         )
 
     getAllProfilesForGroup = () =>
-        new GetAllProfilesForGroup(
+        new GetAllProfilesForGroupUseCase(
             this.profileRepository
         )
 
-    generateBoards = () =>
-        new GenerateBoardsUseCase(
-            this.boardGenerator,
-            this.gameRepository
-
+    getAllGroupsForUser = () =>
+        new GetAllGroupsForUserUseCase(
+            this.groupRepository
         )
-    getRegisterPlayedGameUseCase = () =>
+
+    getAllGroups = () =>
+        new GetAllGroupsUseCase(
+            this.groupRepository
+        )
+
+    getGroupByName = () =>
+        new GetGroupByNameUseCase(
+            this.groupRepository
+        )
+
+    createGroupUseCase = () =>
+        new CreateGroupUseCase(
+            this.groupRepository
+        )
+
+    addUserToGroupUseCase = () =>
+        new AddUserToGroupUseCase(
+            this.groupRepository
+        )
+
+    registerPlayedGameUseCase = () =>
         new RegisterPlayedGameUseCase(
             this.playDecoder,
             this.playRepository,
             this.gameRepository
-
         )
 
     private getPlayRepository() {
         return new PlayPrismaRepository()
+    }
+
+    private getGroupRepository() {
+        return new GroupPrismaRepository()
     }
 
     private getProfileRepository() {

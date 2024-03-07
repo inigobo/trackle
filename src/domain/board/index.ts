@@ -1,1 +1,1 @@
-export type { Board } from './board'
+export type { Board, LetterState, PaintedLetter } from './board'

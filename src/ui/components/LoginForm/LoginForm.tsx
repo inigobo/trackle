@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/component'
 import { styled } from '@stitches/react'
-import { Formik } from 'formik'
+import { Formik, FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { Card } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
@@ -10,25 +10,30 @@ import RegisterCard from '../RegisterCard/RegisterCard'
 import { LoginFormStyles } from './LoginForm.styles'
 import { formikSchema } from './formik/formikSchema'
 
+type Values = {
+  email: string
+  password: string
+}
+
 const LoginForm = () => {
   const supabase = createClient()
   const router = useRouter()
 
-  async function submitHandler(
-    event,
-    { setFieldError, setSubmitting, resetForm }
+  async function handleSubmit(
+    values: Values,
+    { setFieldError, setSubmitting, resetForm }: FormikHelpers<Values>
   ) {
     setSubmitting(true)
 
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: event.email,
-      password: event.password,
+      email: values.email,
+      password: values.password,
     })
 
     const username = data.user?.user_metadata.username
 
     if (error) {
-      await setFieldError('password', 'Invalid credentials')
+      setFieldError('password', 'Invalid credentials')
     } else {
       setSubmitting(false)
       resetForm()
@@ -40,17 +45,16 @@ const LoginForm = () => {
     <LoginFormLayout style={LoginFormStyles}>
       <Formik
         validationSchema={formikSchema}
-        onSubmit={submitHandler}
+        onSubmit={handleSubmit}
         initialValues={{
           email: '',
           password: '',
         }}
         validateOnChange={false}>
         {({
-          handleSubmit = { submitHandler },
+          handleSubmit,
           handleChange,
           handleBlur,
-          touched,
           errors,
           values,
         }) => {
@@ -78,11 +82,11 @@ const LoginForm = () => {
 
                 <FloatingLabel
                   controlId="floatingInput3"
-                  label="Password"
+                  label="Contraseña"
                   className="mb-3">
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Contraseña"
                     autoComplete="current-password"
                     value={values.password}
                     onChange={handleChange('password')}
@@ -95,7 +99,7 @@ const LoginForm = () => {
                 </FloatingLabel>
               </Form.Group>
               <Button variant="primary" type="submit">
-                Submit
+                Acceder
               </Button>
             </Form>
           )

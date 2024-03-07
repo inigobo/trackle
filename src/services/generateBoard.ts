@@ -5,12 +5,11 @@ import { LetterState, PaintedWord } from "../domain/board/board"
 export class BoardGenerator {
 
     paintBoard(attempts: string[], solution: string, maxAttempts: number): Board {
-        console.log({attempts})
         const rows = attempts.map(attempt => this.paintRow(attempt, solution))
         while (rows.length < maxAttempts) {
             rows.push(Array(5).fill({ letter: "", state: LetterState.Empty }))
         }
-        return rows as Board
+        return rows 
     }
 
     private paintRow(attemptString: string, solutionString: string): PaintedWord {
@@ -32,7 +31,7 @@ export class BoardGenerator {
 
         for (let i = 0; i < paintedWord.length; i++) {
             if (paintedWord[i].state !== LetterState.Correct) {
-                const solutionLetter = solution.find((letter) => letter.letter === paintedWord[i].letter && letter.count !== -1)
+                const solutionLetter = solution.find((letter) => letter.letter === paintedWord[i].letter && letter.count === -1)
                 if (solutionLetter) {
                     solutionLetter.count++
                     paintedWord[i].state = LetterState.Present

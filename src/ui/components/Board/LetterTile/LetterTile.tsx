@@ -1,4 +1,4 @@
-import { LetterState, PaintedLetter } from '@/src/domain/board/board'
+import { LetterState, PaintedLetter } from '@/src/application/board/'
 import { styled } from '@stitches/react'
 import { LetterTileLayoutStyles } from './LetterTile.styles'
 
@@ -12,7 +12,7 @@ export const LetterTile = ({ letter, state }: PaintedLetter) => {
     3: 'c',
   }
 
-  const paint = paintMap[state] as string
+  const paint = paintMap[state] as 'p' | 'e' | 'c' | 'm'
 
   return <LetterTileLayout paint={paint}>{letter}</LetterTileLayout>
 }

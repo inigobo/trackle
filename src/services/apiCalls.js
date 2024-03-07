@@ -1,10 +1,15 @@
 import axios from 'axios'
+const GROUP_AVATAR_ROOT = 'https://api.dicebear.com/7.x/identicon/svg?seed='
 const AVATAR_ROOT = 'https://api.dicebear.com/7.x/pixel-art/svg?seed='
 const GIPHY_ROOT = 'https://api.giphy.com/v1/gifs'
 const GIPHY_API_KEY = process.env.GIPHY_API_KEY
 
 export const getSGV = seed => {
   return `${AVATAR_ROOT}/${seed}.svg`
+}
+
+export const getGroupAvatarSGV = seed => {
+  return `${GROUP_AVATAR_ROOT}/${seed}.svg`
 }
 
 export const getGifsByWord = async wordleWord => {

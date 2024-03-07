@@ -1,1 +1,0 @@
-export { GameCollection } from './GameCollection'

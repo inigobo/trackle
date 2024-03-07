@@ -1,19 +1,22 @@
 import { createClient } from '@/utils/supabase/component'
 import { styled } from '@stitches/react'
-import { useUser } from '@supabase/auth-helpers-react'
+import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Button, Card, Stack } from 'react-bootstrap'
 import { Avatar } from '../Avatar'
-import { LoginCardStyles, UsernameContainerStyles } from './LoginCard.styles'
+import { UsernameContainerStyles } from './LoginCard.styles'
 
-export const LoginCard = () => {
+type LoginCardProps = {
+  user: User
+}
+
+export const LoginCard = ({ user }: LoginCardProps) => {
   const router = useRouter()
-  const user = useUser()
   const supabase = createClient()
 
   const handleClickUser = async () => {
-    router.push(`profile/${user?.user_metadata.username}`)
+    router.push(`/profile/${user.user_metadata.username}`)
   }
 
   const handleLogout = async () => {
@@ -27,16 +30,15 @@ export const LoginCard = () => {
         <Avatar seed={user?.user_metadata.avatar_seed} variant="small"></Avatar>
         <UsernameContainer>{user?.user_metadata.fullname}</UsernameContainer>
       </Stack>
-      <Button onClick={handleLogout}>Logout</Button>
+      <Button onClick={handleLogout}>Cerrar sesión</Button>
     </Card>
   ) : (
     <Link
       href="/login"
       className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-      Login
+      Iniciar sesión
     </Link>
   )
 }
 
-const CardLayout = styled('div', LoginCardStyles)
 const UsernameContainer = styled('div', UsernameContainerStyles)

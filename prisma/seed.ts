@@ -6,9 +6,9 @@ import games from './seedData/games'
 const prisma = new PrismaClient()
 
 async function main() {
-    await seedProfiles(profiles)
-    // await processPromisesBatch(games, 100, insertGame)
-    await processPromisesBatch(plays, 10, insertPlay)
+    // await seedProfiles(profiles)
+    await processPromisesBatch(games, 100, insertGame)
+    // await processPromisesBatch(plays, 10, insertPlay)
 }
 
 async function insertPlay(play: Play) {
@@ -61,7 +61,7 @@ export async function processPromisesBatch(
         const end = start + limit > items.length ? items.length : start + limit;
 
         const slicedResults = await Promise.all(items.slice(start, end).map(fn));
-        console.log(`Progress: ${start}/${results.length}`)
+        console.log(`Progress: ${results.length}/${items.length}`)
 
         results = [
             ...results,

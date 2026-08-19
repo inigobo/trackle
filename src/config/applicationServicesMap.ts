@@ -14,6 +14,9 @@ import { AddUserToGroupUseCase } from "../application/group/useCases/addUserToGr
 import { GetAllGroupsForUserUseCase } from "../application/group/useCases/getAllGroupsForUser.useCase"
 import { GetAllGroupsUseCase } from "../application/group/useCases/getAllGroups.useCase"
 import { GetGroupByNameUseCase } from "../application/group/useCases/getGroupByName.useCase"
+import { GetGroupLeaderboardUseCase } from "../application/group/useCases/getGroupLeaderboard.useCase"
+import { GetProfileStatsUseCase } from "../application/profile/useCases/getProfileStats.useCase"
+import { StatsCalculator } from "../services/statsCalculator"
 
 class ApplicationServicesMap {
 
@@ -23,6 +26,7 @@ class ApplicationServicesMap {
     groupRepository = this.getGroupRepository()
     boardGenerator = this.getBoardGenerator()
     playDecoder = this.getPlayDecoder()
+    statsCalculator = this.getStatsCalculator()
 
 
     getPlayForUserAndDayUseCase = () =>
@@ -45,6 +49,21 @@ class ApplicationServicesMap {
     getAllProfilesForGroup = () =>
         new GetAllProfilesForGroupUseCase(
             this.profileRepository
+        )
+
+    getProfileStats = () =>
+        new GetProfileStatsUseCase(
+            this.playRepository,
+            this.gameRepository,
+            this.statsCalculator
+        )
+
+    getGroupLeaderboard = () =>
+        new GetGroupLeaderboardUseCase(
+            this.groupRepository,
+            this.playRepository,
+            this.gameRepository,
+            this.statsCalculator
         )
 
     getAllGroupsForUser = () =>
@@ -101,6 +120,10 @@ class ApplicationServicesMap {
 
     private getPlayDecoder() {
         return new PlayDecoder()
+    }
+
+    private getStatsCalculator() {
+        return new StatsCalculator()
     }
 }
 

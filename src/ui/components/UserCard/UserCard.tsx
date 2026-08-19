@@ -7,9 +7,19 @@ import { TitleContainerStyle, UserCardStyle } from './UserCard.styles'
 
 type UserCardProps = {
   profile: Profile
+  position?: number
+  score?: number
+  wins?: number
+  gamesPlayed?: number
 }
 
-export const UserCard = ({ profile }: UserCardProps) => {
+export const UserCard = ({
+  profile,
+  position,
+  score,
+  wins,
+  gamesPlayed,
+}: UserCardProps) => {
   const router = useRouter()
 
   const handleSelectCard = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -22,8 +32,16 @@ export const UserCard = ({ profile }: UserCardProps) => {
   return (
     <Container onClick={handleSelectCard}>
       <CardLayout>
+        {position !== undefined && <PositionContainer>#{position}</PositionContainer>}
         <Avatar seed={profile.avatarSeed} variant="medium" />
-        <TitleContainer>{profile.username}</TitleContainer>
+        <div>
+          <TitleContainer>{profile.username}</TitleContainer>
+          {score !== undefined && (
+            <StatsContainer>
+              {`${score} pts · ${wins} victorias · ${gamesPlayed} partidas`}
+            </StatsContainer>
+          )}
+        </div>
       </CardLayout>
     </Container>
   )
@@ -31,3 +49,5 @@ export const UserCard = ({ profile }: UserCardProps) => {
 
 const CardLayout = styled(Container, UserCardStyle)
 const TitleContainer = styled('div', TitleContainerStyle)
+const PositionContainer = styled('span', { fontWeight: 'bold', marginRight: '0.5rem' })
+const StatsContainer = styled('div', { fontSize: '0.85rem', color: '#666' })

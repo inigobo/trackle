@@ -1,7 +1,6 @@
 import { PlayRepository } from "@/src/domain/play"
 import { PlayDecoder } from "../../../services/playDecoder"
 import { GameRepository } from "@/src/domain/game"
-import Error from "next/error"
 
 export class RegisterPlayedGameUseCase {
     constructor(
@@ -14,18 +13,15 @@ export class RegisterPlayedGameUseCase {
         const submittedSolution = this.playDecoder.decodeSolution(url)
         const submittedAttempts = this.playDecoder.decodeAttempts(url)
 
-        if (!submittedSolution) {
-            throw Error
+        if (!submittedSolution || !submittedAttempts) {
+            throw new Error("Invalid game URL")
         }
 
-        const game = await this.gameRepository.findByWord(submittedSolution)
-
-        if (!submittedAttempts) {
-            throw Error
-        }
+        const game =
+            await this.gameRepository.findBySolution(submittedSolution)
+            ?? await this.gameRepository.create(submittedSolution)
 
         return await this.playRepository.addPlay(submittedAttempts, game.id, userId)
-
     }
 
 }

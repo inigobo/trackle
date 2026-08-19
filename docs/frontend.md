@@ -52,6 +52,4 @@ through `applicationServicesMap` use cases. Protected pages redirect to
 
 ## Known issues
 
-- `LeaderboardPage` hardcodes `http://localhost:3000` in the invite link.
-- `ProfileDetailPage` hardcodes the initially selected game (`showGameId = 788`).
 - `Navbar` is not wired into `_app.page.tsx` layout consistently.

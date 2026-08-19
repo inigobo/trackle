@@ -14,17 +14,25 @@ The backend lives inside the same Next.js app: API routes under
 | `/api/auth/callback` | GET | Supabase code exchange | Auth redirect after email confirmation |
 | `/api/auth/confirm` | — | — | Auth confirmation/error helper pages |
 
+`/api/play/create` returns `400` for undecodable URLs, `409` when the play was
+already registered (Prisma `P2002` on the composite PK), `500` otherwise; the
+client surfaces the returned message.
+
 ⚠️ The mutation routes **trust the caller-provided `userId`** — they do not
 verify the Supabase session. This must be fixed before any public deployment.
 
 ## Use cases (`src/application/*/useCases`)
 
-- **play**: `registerPlayedGame` (decode URL → find game by solution → insert
+- **play**: `registerPlayedGame` (decode URL → find game by solution,
+  **auto-creating the `Game` row (`max(id)+1`) for unseen solutions** → insert
   play), `getPlayForUserAndDay`, `getAllPlaysFromUser` (joins plays with games
   and paints boards via `BoardGenerator`).
-- **profile**: `getProfileByUsername`, `getAllProfilesForGroup`.
+- **profile**: `getProfileByUsername`, `getAllProfilesForGroup`,
+  `getProfileStats` (games played, wins, win %, average attempts, current/max
+  streak — via `StatsCalculator`).
 - **group**: `createGroup`, `addUserToGroup`, `getAllGroupsForUser`,
-  `getAllGroups`, `getGroupByName`.
+  `getAllGroups`, `getGroupByName`, `getGroupLeaderboard` (members ranked by
+  score: `7 - attempts` points per win, tie-break on wins).
 
 All use cases are instantiated through
 `src/config/applicationServicesMap.ts` (manual DI singleton).

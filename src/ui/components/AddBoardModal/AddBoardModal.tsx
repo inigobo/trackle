@@ -35,15 +35,18 @@ export const AddBoardModal = ({ userId }: AddBoardModalProps) => {
         body: JSON.stringify(data),
       })
 
+      const body = await response.json()
+
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`)
+        alert(body.message ?? 'Ha ocurrido un error. Inténtalo de nuevo.')
+        return
       }
 
       setShow(false)
       router.reload()
     } catch (error) {
       console.error('Error creating game:', error)
-      alert('An error occurred. Please try again later.')
+      alert('Ha ocurrido un error. Inténtalo de nuevo.')
     }
   }
 

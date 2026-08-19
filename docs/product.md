@@ -28,18 +28,20 @@ ranks players inside private groups.
    and renders the selected board full size.
 4. **Create / join groups** — any user can create a group; group owners share
    an invitation link (`/join?g=<groupId>`).
-5. **Leaderboard** — each group has a leaderboard page listing its members.
+5. **Leaderboard** — each group has a leaderboard ranking members by score
+   (`7 - attempts` points per win, tie-break on wins), with wins and games
+   played per member.
+6. **Profile stats** — the profile page shows games played, win percentage,
+   average attempts and current/max streak (consecutive day-numbers played).
 
 ## Known limitations (as of last commit)
 
-- Leaderboard shows group members but **no scoring or ranking** yet.
 - Play registration depends on a fragile URL format (`b=`/`s=` base64 params);
-  there is no validation or graceful error handling when the format changes.
-- No automatic detection of the current game day; the solution must match an
-  existing `Game` row.
+  malformed URLs return a friendly 400 but format changes would break parsing.
+- No automatic detection of the current game day (game ids are inferred as
+  `max(id) + 1` when an unseen solution arrives).
 - No search/filter on leaderboards (`SearchBar` exists but is commented out).
-- No stats (streaks, attempt distribution, win rate).
-- Invitation link is hardcoded to `http://localhost:3000`.
+- No attempt-distribution chart or per-day filtering of stats.
 - UI is Spanish-only.
 
 ## Roadmap

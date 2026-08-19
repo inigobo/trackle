@@ -25,9 +25,24 @@ export default async function handler(
 
   } catch (error) {
     console.error('Error creating game:', error);
+
+    if (error instanceof Error && error.message === 'Invalid game URL') {
+      return res.status(400).json({
+        play: undefined,
+        message: 'El enlace no es válido. Copia el link completo que aparece al terminar la partida.'
+      })
+    }
+
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+      return res.status(409).json({
+        play: undefined,
+        message: 'Ya has registrado esta partida'
+      })
+    }
+
     res.status(500).json({
       play: undefined,
-      message: 'An error occurred'
+      message: 'Ha ocurrido un error inesperado'
     })
   }
 }

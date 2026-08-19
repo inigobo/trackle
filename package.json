@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test": "next dev",
     "build": "npx prisma generate && NODE_ENV=local next build",
     "build-prod": "npx prisma generate && NODE_ENV=production next build",
     "start": "next start",

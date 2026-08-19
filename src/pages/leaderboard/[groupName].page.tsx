@@ -42,39 +42,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .getGroupByName()
     .run(context.params.groupName)
 
-  const profiles = await applicationServicesMap
-    .getAllProfilesForGroup()
-    .run(group.id)
+  const entries = await applicationServicesMap
+    .getGroupLeaderboard()
+    .run(context.params.groupName)
 
-  return { props: { profiles, group, user: data.user } }
+  return { props: { entries, group, user: data.user } }
 }
 
 export default function LeaderboardPage({
-  profiles,
+  entries,
   group,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // const [currentPlayId, setCurrentPlayId] = useState(344)
-  // const [searchTerm, setSearchTerm] = useState('')
-
-  // const handleSearch = (propSearchTerm: SetStateAction<string>) => {
-  //   setSearchTerm(propSearchTerm)
-  // }
-
-  // const handleFilterPlayId = (propPlayId: SetStateAction<number>) => {
-  //   setCurrentPlayId(propPlayId)
-  // }
-
   return (
     <LeaderboardLayout>
       <Button
         onClick={() => {
-          navigator.clipboard.writeText(`http://localhost:3000/join?g=${group.id}`)
+          navigator.clipboard.writeText(
+            `${window.location.origin}/join?g=${group.id}`
+          )
         }}>
         Copiar link de invitación
       </Button>
       <h3>{`Clasificación de ${group.name}`}</h3>
-      {/* <SearchBar onSearch={handleSearch} onFilterPlayId={handleFilterPlayId} /> */}
-      <UserList profiles={profiles} />
+      <UserList entries={entries} />
     </LeaderboardLayout>
   )
 }

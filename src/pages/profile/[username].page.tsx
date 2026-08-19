@@ -22,14 +22,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .getAllPlaysFromUser()
     .run(profile.id)
 
-  return { props: { plays, profile, user: data.user } }
+  const stats = await applicationServicesMap.getProfileStats().run(profile.id)
+
+  return { props: { plays, profile, user: data.user, stats } }
 }
 
 export default function ProfileDetailPage({
   plays,
   profile,
+  stats,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [showGameId, setShowGameId] = useState<number>(788)
+  const latestGameId = plays.length
+    ? Math.max(...plays.map(play => play.gameId))
+    : 0
+  const [showGameId, setShowGameId] = useState<number>(latestGameId)
   const [bigPlay, setBigPlay] = useState<PlayWithBoard | null>(null)
 
   useEffect(() => {
@@ -50,7 +56,7 @@ export default function ProfileDetailPage({
   return (
     <>
       <Row>
-        <ProfileInfo currentUser={{ ...profile }} />
+        <ProfileInfo currentUser={{ ...profile }} stats={stats} />
         <Col>
           {bigPlay ? (
             <>

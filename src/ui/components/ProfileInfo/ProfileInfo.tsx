@@ -1,3 +1,4 @@
+import { PlayStats } from '@/src/services/statsCalculator'
 import { styled } from '@stitches/react'
 import { Col, Row, Stack } from 'react-bootstrap'
 import { Avatar } from '../Avatar'
@@ -10,16 +11,10 @@ export type ProfileProps = {
     fullName: string
     username: string
   }
+  stats: PlayStats
 }
 
-// type ProfileStats = {
-//   streak: number
-//   maxStreak: number
-//   winPercentage: number
-//   gamesPlayed: number
-// }
-
-export const ProfileInfo = ({ currentUser }: ProfileProps) => {
+export const ProfileInfo = ({ currentUser, stats }: ProfileProps) => {
   return (
     <Col>
       <Row>
@@ -33,8 +28,16 @@ export const ProfileInfo = ({ currentUser }: ProfileProps) => {
       </Row>
       <Row>
         <Stack direction="horizontal">
-          <InfoContainer description="streak" value={8} />
-          <InfoContainer description="games" value={120} />
+          <InfoContainer description="racha" value={stats.currentStreak} />
+          <InfoContainer description="partidas" value={stats.gamesPlayed} />
+          <InfoContainer
+            description="victorias"
+            value={`${stats.winPercentage}%`}
+          />
+          <InfoContainer
+            description="media intentos"
+            value={stats.averageAttempts}
+          />
         </Stack>
       </Row>
     </Col>

@@ -5,7 +5,7 @@ import { Icon } from '../../Icon'
 
 type InfoContainerProps = {
   description: string
-  value: number
+  value: number | string
 }
 
 export const InfoContainer = ({ description, value }: InfoContainerProps) => {

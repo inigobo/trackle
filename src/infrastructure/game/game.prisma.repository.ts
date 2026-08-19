@@ -10,20 +10,35 @@ export class GamePrismaRepository extends PrismaRepository implements GameReposi
         this.repository = this.getClient().game
     }
 
-    async findByWord(word: string): Promise<Game> {
+    async findBySolution(solution: string): Promise<Game | null> {
         const prismaGame = await this.repository.findFirst({
             where: {
-                solution: word,
+                solution,
             }
         })
 
-        if (!prismaGame) {
-            throw Error
-        }
+        return prismaGame
+            ? { id: prismaGame.id, solution: prismaGame.solution }
+            : null
+    }
 
-        return {
-            id: prismaGame.id,
-            solution: prismaGame.solution
+    async create(solution: string): Promise<Game> {
+        const { _max } = await this.repository.aggregate({ _max: { id: true } })
+
+        try {
+            const prismaGame = await this.repository.create({
+                data: {
+                    id: (_max.id ?? 0) + 1,
+                    solution,
+                }
+            })
+
+            return { id: prismaGame.id, solution: prismaGame.solution }
+        } catch {
+            // A concurrent registration created the same game first
+            const existing = await this.findBySolution(solution)
+            if (existing) return existing
+            throw new Error(`Could not create game for solution ${solution}`)
         }
     }
 
